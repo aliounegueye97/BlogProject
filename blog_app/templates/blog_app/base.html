@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mon Blog{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'blog_app/css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a href="{% url 'article-list' %}" class="logo">📝 Mon Blog</a>
+                <div class="nav-links">
+                    <a href="{% url 'article-list' %}">Accueil</a>
+                    <a href="{% url 'article-create' %}">Nouvel Article</a>
+                    <a href="/admin/">Admin</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Mon Blog - Master MICDA</p>
+        </div>
+    </footer>
+</body>
+</html>

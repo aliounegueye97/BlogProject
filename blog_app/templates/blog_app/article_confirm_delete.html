@@ -1,0 +1,17 @@
+{% extends 'blog_app/base.html' %}
+
+{% block title %}Supprimer l'article{% endblock %}
+
+{% block content %}
+<div class="delete-container">
+    <h1>Supprimer l'article</h1>
+    <p>Êtes-vous sûr de vouloir supprimer l'article <strong>"{{ article.titre }}"</strong> ?</p>
+    <p class="warning">⚠️ Cette action est irréversible.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+        <a href="{% url 'article-detail' article.pk %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

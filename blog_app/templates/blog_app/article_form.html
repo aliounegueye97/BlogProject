@@ -1,0 +1,34 @@
+{% extends 'blog_app/base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Modifier l'article{% else %}Nouvel article{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>{% if form.instance.pk %}Modifier l'article{% else %}Créer un nouvel article{% endif %}</h1>
+    
+    <form method="post" enctype="multipart/form-data" class="article-form">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="errors">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Mettre à jour{% else %}Publier{% endif %}
+            </button>
+            <a href="{% url 'article-list' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

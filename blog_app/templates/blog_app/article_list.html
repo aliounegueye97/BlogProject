@@ -1,0 +1,42 @@
+{% extends 'blog_app/base.html' %}
+
+{% block title %}Accueil - Blog{% endblock %}
+
+{% block content %}
+<div class="articles-grid">
+    <h1>Derniers Articles</h1>
+    {% if articles %}
+        <div class="grid-container">
+            {% for article in articles %}
+                <article class="article-card">
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="article-image">
+                    {% endif %}
+                    <div class="article-content">
+                        <h2><a href="{% url 'article-detail' article.pk %}">{{ article.titre }}</a></h2>
+                        <p class="meta">Par {{ article.auteur }} | {{ article.date_publication|date:"d/m/Y H:i" }}</p>
+                        <p>{{ article.contenu|truncatewords:30 }}</p>
+                        <a href="{% url 'article-detail' article.pk %}" class="read-more">Lire la suite →</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+        
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; Première</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Précédente</a>
+                {% endif %}
+                <span>Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Dernière &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p>Aucun article disponible pour le moment.</p>
+    {% endif %}
+</div>
+{% endblock %}
