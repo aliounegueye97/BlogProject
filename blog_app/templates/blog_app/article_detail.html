@@ -1,34 +1,77 @@
-{% extends 'blog_app/base.html' %}
+{% extends 'blog/base.html' %}
 
-{% block title %}{{ article.titre }}{% endblock %}
+{% block title %}{{ article.titre }} - Mon Blog {% endblock %}
 
 {% block content %}
-<article class="article-detail">
-    <div class="article-header">
-        <h1>{{ article.titre }}</h1>
-        <div class="meta">
-            <p>✍️ Par {{ article.auteur }} | 📅 {{ article.date_publication|date:"d/m/Y H:i" }}</p>
-        </div>
-        {% if user.is_authenticated %}
-            <div class="actions">
-                <a href="{% url 'article-update' article.pk %}" class="btn btn-edit">✏️ Modifier</a>
-                <a href="{% url 'article-delete' article.pk %}" class="btn btn-delete">🗑️ Supprimer</a>
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'blog:article-list' %}">Accueil</a></li>
+                <li class="breadcrumb-item active">{{ article.titre }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <article class="card shadow-sm">
+            {% if article.image %}
+                <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.titre }}" style="max-height: 400px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <h1 class="card-title">{{ article.titre }}</h1>
+                
+                <div class="text-muted mb-3">
+                    <small>
+                        <i class="fas fa-user me-1"></i><strong>Auteur:</strong> {{ article.auteur }}<br>
+                        <i class="fas fa-calendar me-1"></i><strong>Date de publication:</strong> {{ article.date_publication|date:"d F Y à H:i" }}<br>
+                        <i class="fas fa-clock me-1"></i><strong>Dernière modification:</strong> {{ article.date_modification|date:"d F Y à H:i" }}
+                    </small>
+                </div>
+
+                <div class="mb-3">
+                    <span class="badge bg-{{ article.statut|yesno:'success,secondary' }}">
+                        {{ article.get_statut_display }}
+                    </span>
+                </div>
+
+                <div class="article-content">
+                    {{ article.contenu|linebreaks }}
+                </div>
             </div>
-        {% endif %}
-    </div>
-    
-    {% if article.image %}
-        <div class="article-image-full">
-            <img src="{{ article.image.url }}" alt="{{ article.titre }}">
+        </article>
+
+        <div class="mt-4">
+            <a href="{% url 'blog:article-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Retour à la liste
+            </a>
+            <a href="{% url 'blog:article-update' article.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i>Modifier
+            </a>
+            <a href="{% url 'blog:article-delete' article.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash me-1"></i>Supprimer
+            </a>
         </div>
-    {% endif %}
-    
-    <div class="article-content">
-        {{ article.contenu|linebreaks }}
     </div>
-    
-    <div class="back-link">
-        <a href="{% url 'article-list' %}" class="btn btn-back">← Retour aux articles</a>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-1"></i>Informations</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Statut:</strong> 
+                    <span class="badge bg-{% if article.statut == 'publie' %}success{% else %}secondary{% endif %}">
+                        {{ article.get_statut_display }}
+                    </span>
+                </p>
+                <p><strong>Slug:</strong> {{ article.slug }}</p>
+                <p><strong>Date de création:</strong> {{ article.date_creation|date:"d/m/Y H:i" }}</p>
+                <p><strong>Auteur:</strong> {{ article.auteur }}</p>
+            </div>
+        </div>
     </div>
-</article>
+</div>
 {% endblock %}
